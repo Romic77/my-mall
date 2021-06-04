@@ -1,4 +1,4 @@
-package com.example.goods;
+package com.example.goods.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

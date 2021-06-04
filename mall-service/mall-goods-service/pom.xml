@@ -3,36 +3,26 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>my-mall</artifactId>
+        <artifactId>mall-service</artifactId>
         <groupId>com.example</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mall-service</artifactId>
-    <packaging>pom</packaging>
-    <description>存储所有微服务工程</description>
-    <modules>
-        <module>mall-goods-service</module>
-    </modules>
+    <artifactId>mall-goods-service</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
+    <description>shop_goods数据库的增删盖茶</description>
+
     <dependencies>
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>mall-service-dependency</artifactId>
+            <artifactId>mall-goods-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>mall-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
     </dependencies>
 </project>
