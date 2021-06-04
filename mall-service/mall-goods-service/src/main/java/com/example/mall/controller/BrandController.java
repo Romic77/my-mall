@@ -1,10 +1,13 @@
 package com.example.mall.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.goods.model.Brand;
 import com.example.mall.service.BrandService;
 import com.example.util.RespResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/brand")
@@ -41,6 +44,18 @@ public class BrandController {
     public RespResult delete(@PathVariable("id") String id){
         brandService.removeById(id);
         return RespResult.ok();
+    }
+
+    @PostMapping("/search")
+    public RespResult<List<Brand>> queryList(@RequestBody Brand brand){
+        List<Brand> brands=brandService.queryList(brand);
+        return RespResult.ok(brands);
+    }
+
+    @PostMapping("/search/{page}/{size}")
+    public RespResult<Page<Brand>> queryPageList(@RequestBody Brand brand,@PathVariable("page")Long page,@PathVariable("size") Long size){
+        Page<Brand> brands=brandService.queryPageList(brand,page,size);
+        return RespResult.ok(brands);
     }
 
 }
