@@ -3,19 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>my-mall</artifactId>
+        <artifactId>mall-service</artifactId>
         <groupId>com.example</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mall-service</artifactId>
-    <packaging>pom</packaging>
-    <description>存储所有微服务工程</description>
-    <modules>
-        <module>mall-goods-service</module>
-        <module>mall-file-service</module>
-    </modules>
+    <artifactId>mall-file-service</artifactId>
+
+    <description>文件上传</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -24,16 +20,20 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>mall-service-dependency</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>com.ceph</groupId>
+            <artifactId>rados</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ceph</groupId>
+            <artifactId>libcephfs</artifactId>
+            <version>0.80.5</version>
         </dependency>
 
         <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>mall-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>org.javaswift</groupId>
+            <artifactId>joss</artifactId>
+            <version>0.10.2</version>
         </dependency>
-
     </dependencies>
 </project>

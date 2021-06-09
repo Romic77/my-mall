@@ -1,0 +1,25 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: mall-file
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+        server-addr: localhost:8848
+      discovery:
+        server-addr: localhost:8848
+
+ceph:
+  username: cephtester:subtester  #Ceph配置 主用户名：子用户名
+  password: gupao #秘钥
+  authUrl: http://192.168.100.131:7480/auth/1.0 #接口访问路径
+  defaultContainerName: user_datainfo #默认容器名字
+#图片路径
+cephurl: http://localhost:8082/file/download/
+
+#日志配置
+logging:
+  pattern:
+    console: "%msg%n"
