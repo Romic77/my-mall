@@ -4,10 +4,7 @@ import com.example.goods.model.SkuAttribute;
 import com.example.mall.service.SkuAttributeService;
 import com.example.util.RespResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/skuAttribute")
+@CrossOrigin
 public class SkuAttributeController {
     @Autowired
     private SkuAttributeService skuAttributeService;
