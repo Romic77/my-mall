@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 /**
  * @author chenqi
  *
- * http://localhost:8082/file/upload
+ * http://localhost:8082/file/upload. 
  */
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class MallFileApplication {
