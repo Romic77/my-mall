@@ -71,6 +71,13 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, Spu> implements SpuSe
             sku.setBrandId(spu.getBrandId());
             //品牌名字
             sku.setBrandName(brand.getName());
+            //spuid
+            sku.setSpuId(spu.getId());
+            //状态 商品状态 1-正常，2-下架，3-删除
+            sku.setStatus(1);
+
+            //添加
+            skuMapper.insert(sku);
         }
     }
 }

@@ -23,7 +23,7 @@ public class SpuController {
      */
     @PostMapping("/save")
     public RespResult save(@RequestBody Product product) {
-
+        spuService.saveProduct(product);
         return RespResult.ok();
     }
 }
