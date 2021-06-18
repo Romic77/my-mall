@@ -1,0 +1,22 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: mall-canal
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+        server-addr: 127.0.0.1:8848
+      discovery:
+        server-addr: 127.0.0.1:8848
+canal:
+  server: 127.0.0.1:11111
+  destination: example
+#日志配置
+#日志配置
+logging:
+  pattern:
+    console: "%msg%n"
+  level:
+    root: debug
