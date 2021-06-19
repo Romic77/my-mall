@@ -1,22 +1,21 @@
 server:
-  port: 8083
+  port: 8084
 spring:
   application:
-    name: mall-canal
+    name: mall-search
   cloud:
     nacos:
       config:
         file-extension: yaml
         server-addr: 127.0.0.1:8848
       discovery:
+        #Nacos的注册地址
         server-addr: 127.0.0.1:8848
-canal:
-  server: 192.168.116.135:11111
-  destination: example
-#日志配置
+  #Elasticsearch服务配置
+  elasticsearch:
+    rest:
+      uris: http://192.168.116.135:9200
 #日志配置
 logging:
   pattern:
     console: "%msg%n"
-  level:
-    root: error
