@@ -209,14 +209,19 @@ public class SkuSearchServiceImpl implements SkuSearchService {
                 //以attr_开始，动态属性 -> 例如前端传递attr_学习费用=1万 查询
                 if (entry.getKey().startsWith("attr_")) {
                     String key = "attrMap." + entry.getKey().replaceFirst("attr_", "") + ".keyword";
-                    boolQueryBuilder.must(QueryBuilders.termQuery(key, entry.getValue()));
+                    boolQueryBuilder.must(QueryBuilders.termQuery(key, entry.getValue().toString()));
                 }
             }
-
-
-            //分页查询
-            builder.withPageable(PageRequest.of(currentPage(searchMap), pageSize(searchMap)));
+            //排序
+            String sfield = searchMap.get("sfield") == null ? "" : searchMap.get("sfield") + "";
+            String sm = searchMap.get("sm") == null ? "" : searchMap.get("sm") + "";
+            if (StringUtils.isNotEmpty(sfield) && StringUtils.isNotEmpty(sm)) {
+                builder.withSort(SortBuilders.fieldSort(sfield).order(SortOrder.valueOf(sm.toUpperCase())));
+            }
         }
+
+        //分页查询
+        builder.withPageable(PageRequest.of(currentPage(searchMap), pageSize(searchMap)));
         return builder.withQuery(boolQueryBuilder);
     }
 
@@ -228,7 +233,7 @@ public class SkuSearchServiceImpl implements SkuSearchService {
         if (StringUtils.isEmpty(page)) {
             return 0;
         }
-        return Integer.parseInt(page)-1;
+        return Integer.parseInt(page) - 1;
     }
 
     /**
