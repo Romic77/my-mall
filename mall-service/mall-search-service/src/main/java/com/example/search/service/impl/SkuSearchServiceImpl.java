@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.example.search.mapper.SkuSearchMapper;
 import com.example.search.model.SkuEs;
 import com.example.search.service.SkuSearchService;
+import com.example.search.util.HighlightResultMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,9 @@ import java.util.*;
 public class SkuSearchServiceImpl implements SkuSearchService {
     @Autowired
     private SkuSearchMapper skuSearchMapper;
+
+    @Autowired
+    private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     /**
      * 根据关健词搜索
@@ -46,9 +51,19 @@ public class SkuSearchServiceImpl implements SkuSearchService {
         //分组查询调用
         group(queryBuilder, searchMap);
 
-        //skuSearchMapper进行搜索
-        AggregatedPage<SkuEs> page = (AggregatedPage<SkuEs>) skuSearchMapper.search(queryBuilder.build());
+        //1.设置高亮信息   关键词前（后）面的标签、设置高亮域
+        HighlightBuilder.Field field = new HighlightBuilder
+                .Field("name")  //根据指定的域进行高亮查询
+                .preTags("<span style=\"color:red;\">")     //关键词高亮前缀
+                .postTags("</span>")   //高亮关键词后缀
+                .fragmentSize(100);     //碎片长度
+        queryBuilder.withHighlightFields(field);
 
+        //skuSearchMapper进行搜索
+        //AggregatedPage<SkuEs> page = (AggregatedPage<SkuEs>) skuSearchMapper.search(queryBuilder.build());
+
+        //2.将非高亮数据替换成高亮数据
+        AggregatedPage<SkuEs> page = elasticsearchRestTemplate.queryForPage(queryBuilder.build(), SkuEs.class,new HighlightResultMapper());
 
         //获取结果集：集合列表、总记录数
         Map<String, Object> resultMap = new HashMap<>();
