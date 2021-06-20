@@ -30,6 +30,7 @@ public class SkuEs {
     private Integer brandId;
     @Field(type = FieldType.Keyword)
     private String brandName;
+    @Field(type = FieldType.Keyword)
     private String skuAttribute;
     private Integer status;
 

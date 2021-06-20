@@ -25,10 +25,7 @@ import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SkuSearchServiceImpl implements SkuSearchService {
@@ -57,6 +54,9 @@ public class SkuSearchServiceImpl implements SkuSearchService {
         Map<String, Object> resultMap = new HashMap<>();
         //解析分组结果
         parseGroup(page.getAggregations(), resultMap);
+
+        //动态属性解析
+        attrParse(resultMap);
 
         List<SkuEs> skuEsList = page.getContent();
         resultMap.put("totalElements", page.getTotalElements());
@@ -109,6 +109,48 @@ public class SkuSearchServiceImpl implements SkuSearchService {
                     .field("brandName")            //根据brandName分组
                     .size(100));                    //分组查询100条
         }
+
+        //前端没有传入属性参数的时候查询属性集合作为搜索条件
+        String skuAttr = searchMap.get("skuAttribute") == null ? "" : searchMap.get("skuAttribute").toString();
+        if (StringUtils.isEmpty(skuAttr)) {
+            //品牌分组
+            builder.addAggregation(AggregationBuilders
+                    .terms("attrmaps")     //查询的数据对应别名
+                    .field("skuAttribute")            //根据brandName分组
+                    .size(100));                    //分组查询100条
+        }
+    }
+
+    /**
+     * 将属性信息合并成Map对象
+     * 原始数据：[{"就业薪资":"10K起","学习费用":"2万"},{"就业薪资":"11K起","学习费用":"3万"}]
+     * 最终数据：attrmaps:{"就业薪资":["10K起","11K起"],"学习费用":["2万","3万"]}
+     */
+    public void attrParse(Map<String, Object> resultMap) {
+        //先获取attrmaps
+        Object attrmaps = resultMap.get("attrmaps");
+        if (attrmaps != null) {
+            List<String> groupList = (List<String>) attrmaps;
+            //定义一个集合Map<String,Set<String>>
+            Map<String, Set<String>> allMaps = new HashMap<>();
+            //循环集合
+            for (String attr : groupList) {
+                Map<String, String> attrMap = JSON.parseObject(attr, Map.class);
+                for (Map.Entry<String, String> entry : attrMap.entrySet()) {
+                    //获取每条记录，将记录转成Map
+                    String key = entry.getKey();
+                    Set<String> values = allMaps.get(key);
+                    if (values == null) {
+                        values = new HashSet<>();
+                    }
+                    values.add(entry.getValue());
+                    //覆盖之前的数据
+                    allMaps.put(key, values);
+                }
+            }
+            //覆盖之前的attrmaps
+            resultMap.put("attrmaps", allMaps);
+        }
     }
 
     /**
@@ -119,16 +161,85 @@ public class SkuSearchServiceImpl implements SkuSearchService {
      */
     public NativeSearchQueryBuilder queryBuilder(Map<String, Object> searchMap) {
         NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
+
+        //组合查询对象
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
         //判断关键词是否为空，不为空，则设置条件
         if (searchMap != null && searchMap.size() > 0) {
             //关键词条件
             String keywords = searchMap.get("keywords") == null ? "" : searchMap.get("keywords") + "";
             if (StringUtils.isNotEmpty(keywords)) {
-                return builder.withQuery(QueryBuilders.termQuery("name", keywords));
+                //return builder.withQuery(QueryBuilders.termQuery("name", keywords));
+                boolQueryBuilder.must(QueryBuilders.termQuery("name", keywords));
             }
 
+            //分类查询
+            String category = searchMap.get("category") == null ? "" : searchMap.get("category") + "";
+            if (StringUtils.isNotEmpty(category)) {
+                boolQueryBuilder.must(QueryBuilders.termQuery("categoryName", category));
+            }
+
+            //品牌查询
+            String brand = searchMap.get("brand") == null ? "" : searchMap.get("brand") + "";
+            if (StringUtils.isNotEmpty(brand)) {
+                boolQueryBuilder.must(QueryBuilders.termQuery("brandName", brand));
+            }
+
+            //价格区间查询
+            // 查询 price=0-500元  500-1000  1000元以上
+            //按照-分隔，要么就是：prices=[0,500]或者[500,1000]或者[1000]
+            //所以分析  0<price<=500或者 500<price<=1000 或者 price>1000
+            String price = searchMap.get("price") == null ? "" : searchMap.get("price") + "";
+            if (StringUtils.isNotEmpty(price)) {
+                //价格区间
+                String[] prices = price.replace("元", "").replace("以上", "").split("-");
+                // price > prices[0]
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("price").gt(Integer.parseInt(prices[0])));
+                // price <= prices[1]
+                if (prices.length == 2) {
+                    boolQueryBuilder.must(QueryBuilders.rangeQuery("price").lte(Integer.parseInt(prices[1])));
+                }
+            }
+
+            // 动态属性查询
+            // 因为有多个动态属性,比如:attr_学习费用,attr_就业薪资等,就需要遍历searchMap
+            // 比如这种情况: http://localhost:8084/search?attr_学习费用=1万&attr_就业薪资=6K起
+            for (Map.Entry<String, Object> entry : searchMap.entrySet()) {
+                //以attr_开始，动态属性 -> 例如前端传递attr_学习费用=1万 查询
+                if (entry.getKey().startsWith("attr_")) {
+                    String key = "attrMap." + entry.getKey().replaceFirst("attr_", "") + ".keyword";
+                    boolQueryBuilder.must(QueryBuilders.termQuery(key, entry.getValue()));
+                }
+            }
+
+
+            //分页查询
+            builder.withPageable(PageRequest.of(currentPage(searchMap), pageSize(searchMap)));
         }
-        return builder;
+        return builder.withQuery(boolQueryBuilder);
+    }
+
+    /**
+     * 分页参数:当前页
+     */
+    public int currentPage(Map<String, Object> searchMap) {
+        String page = searchMap.get("page") == null ? "" : searchMap.get("page") + "";
+        if (StringUtils.isEmpty(page)) {
+            return 0;
+        }
+        return Integer.parseInt(page)-1;
+    }
+
+    /**
+     * 分页参数:每页数量
+     */
+    public int pageSize(Map<String, Object> searchMap) {
+        String pageSize = searchMap.get("pageSize") == null ? "" : searchMap.get("pageSize") + "";
+        if (StringUtils.isEmpty(pageSize)) {
+            return 20;
+        }
+        return Integer.parseInt(pageSize);
     }
 
     /**
@@ -150,4 +261,5 @@ public class SkuSearchServiceImpl implements SkuSearchService {
     public void del(String id) {
         skuSearchMapper.deleteById(id);
     }
+
 }
