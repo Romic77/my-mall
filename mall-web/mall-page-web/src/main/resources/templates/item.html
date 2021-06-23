@@ -66,7 +66,7 @@
 									</span>
                             </li>
                             <li class="f-item">
-                                <span>网站导航</li>
+                                <span>网站导航</span></li>
                         </ul>
                     </div>
 
@@ -1821,7 +1821,6 @@
                 <li>
                     <a href="#" th:text="${three.name}"></a>
                 </li>
-                <li class="active">iphone 6S系类</li>
             </ul>
         </div>
         <!--product-info-->
@@ -1906,13 +1905,12 @@
                         <dl th:each="attr:${attrs}">
                             <dt>
                                 <div class="fl title">
-                                    <i th:text="attr.key"></i>
+                                    <i th:text="${attr.key}"></i>
                                 </div>
                             </dt>
-                            <dd th:each="opt:${attr.value}" v-for="coloritem in goodsdetail.color"
-                                :key="coloritem.index">
+                            <dd th:each="opt:${attr.value}">
                                 <a href="javascript:;" th:@click="|chooseSku('${attr.key}','${opt}')|"
-                                   th:v-bind="|{selected:ischoose('${attr.key}','${opt}')}|" class="selected">
+                                   th:v-bind:class="|{selected:ischoose('${attr.key}','${opt}')}|">
                                     <i th:text="${opt}"></i>
                                     <span title="点击取消选择">&nbsp;</span>
                                 </a>

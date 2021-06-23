@@ -15,7 +15,7 @@ spring:
     encoding: utf-8
   main:
     allow-bean-definition-overriding: true
-pagepath: /Users/chenqi/IdeaProjects
+pagepath: D:/workspace/frant
 logging:
   pattern:
     console: "%msg%n"
