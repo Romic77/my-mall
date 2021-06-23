@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * @Author: chenq
- * @Description:
+ * @Description: http://localhost:8085/web/search
  * @Date: Created in 2021-06-21 10:14
  */
 @SpringBootApplication
