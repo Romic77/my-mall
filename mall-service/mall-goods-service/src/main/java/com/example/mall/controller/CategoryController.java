@@ -30,5 +30,9 @@ public class CategoryController {
         return RespResult.ok(categoryService.findByParentId(id));
     }
 
+    @GetMapping("/{id}")
+    public RespResult<Category> one(@PathVariable("id") Integer id){
+        return RespResult.ok(categoryService.getById(id));
+    }
 
 }

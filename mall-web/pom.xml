@@ -14,6 +14,7 @@
     <description>存储所有和页面渲染相关的工程</description>
     <modules>
         <module>mall-search-web</module>
+        <module>mall-page-web</module>
     </modules>
 
     <properties>

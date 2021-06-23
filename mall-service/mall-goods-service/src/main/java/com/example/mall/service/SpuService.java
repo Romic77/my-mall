@@ -16,4 +16,6 @@ public interface SpuService extends IService<Spu> {
      * @param product
      */
     void saveProduct(Product product);
+
+    Product findBySpuId(String id);
 }

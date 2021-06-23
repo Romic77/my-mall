@@ -26,4 +26,12 @@ public class SpuController {
         spuService.saveProduct(product);
         return RespResult.ok();
     }
+
+    /**
+     * 查询product
+     */
+    @GetMapping("/{id}")
+    public RespResult<Product> one(@PathVariable("id")String id){
+        return RespResult.ok(spuService.findBySpuId(id));
+    }
 }

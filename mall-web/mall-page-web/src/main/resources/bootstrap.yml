@@ -1,24 +1,21 @@
 server:
-  port: 8083
+  port: 8086
 spring:
   application:
-    name: mall-canal
+    name: mall-page-web
   cloud:
     nacos:
       config:
-        file-extension: yaml
         server-addr: 127.0.0.1:8848
+        file-extension: yaml
       discovery:
         server-addr: 127.0.0.1:8848
+  thymeleaf:
+    cache: false
+    encoding: utf-8
   main:
     allow-bean-definition-overriding: true
-canal:
-  server: 192.168.116.135:11111
-  destination: example
-#日志配置
-#日志配置
+pagepath: /Users/chenqi/IdeaProjects
 logging:
   pattern:
     console: "%msg%n"
-  level:
-    root: error

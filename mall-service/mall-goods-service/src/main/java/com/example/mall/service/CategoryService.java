@@ -18,4 +18,5 @@ public interface CategoryService extends IService<Category> {
      * @return
      */
     List<Category> findByParentId(Integer pid);
+
 }
