@@ -603,8 +603,8 @@
                     <a th:href="@{${#strings.replace(url,'price='+searchMap.price,'')}}">×</a>
                 </li>
                 <li class="with-x" th:each="attr:${searchMap}" th:if="${#strings.startsWith(attr.key,'attr_')}">
-                    <i th:text="${#strings.replace(attr.key,'attr_','')}"></i>:<i th:value="${attr.value}"></i>
-                    <a th:href="@{${#strings.replace(url,attr.key+=''attr.value,'')}}">×</a>
+                    <i th:text="${#strings.replace(attr.key,'attr_','')}"></i>:<i th:text="${attr.value}"></i>
+                    <a th:href="@{${#strings.replace(url,attr.key+'='+attr.value,'')}}">×</a>
                 </li>
             </ul>
         </div>
@@ -635,7 +635,7 @@
                 </div>
             </div>
             <div class="type-wrap" th:each="attr:${result.attrmaps}"
-                 th:unless="${#maps.containsKey(searchMap,'attr_'+att.key)}">
+                 th:unless="${#maps.containsKey(searchMap,'attr_'+attr.key)}">
                 <div class="fl key" th:text="${attr.key}"></div>
                 <div class="fl value">
                     <ul class="type-list">
@@ -731,8 +731,8 @@
                         <li class="prev disabled">
                             <a th:href="@{${url}(page=${result.pageInfo.upper})}">«上一页</a>
                         </li>
-                        <li th:each="num:${#number.sequence(result.pageInfo.lpage,result.pageInfo.rpage)}"
-                            th:class="${num}==${result.pageInfo.currentPage}?'active':''">
+                        <li th:each="num:${#numbers.sequence(result.pageInfo.lpage,result.pageInfo.rpage)}"
+                            th:class="${num}==${result.pageInfo.currentpage}?'active':''">
                             <a th:href="@{${url}(page=${num})}" th:text="${num}"></a>
                         </li>
                         <li class="dotted"><span>...</span></li>
