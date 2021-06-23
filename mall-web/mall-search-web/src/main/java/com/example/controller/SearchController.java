@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.search.feign.SkuSearchFeign;
 import com.example.util.RespResult;
+import com.example.util.UrlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +29,12 @@ public class SearchController {
      */
     @GetMapping
     public String search(@RequestParam(required = false) Map<String, Object> searchMap, Model model) {
+        //搜索
         RespResult<Map<String, Object>> resultMap = skuSearchFeign.search(searchMap);
+
+        //组装用户访问的url
+        model.addAttribute("url", UrlUtils.map2url("/web/search", searchMap, "page"));
+        model.addAttribute("urlsort", UrlUtils.map2url("/web/search", searchMap, "page", "sm", "field"));
         model.addAttribute("result", resultMap.getData());
         model.addAttribute("searchMap", searchMap);
         return "search";

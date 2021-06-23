@@ -1,11 +1,11 @@
 package com.example.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
-
 import com.example.search.mapper.SkuSearchMapper;
 import com.example.search.model.SkuEs;
 import com.example.search.service.SkuSearchService;
 import com.example.search.util.HighlightResultMapper;
+import com.example.util.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -15,14 +15,11 @@ import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
@@ -63,7 +60,7 @@ public class SkuSearchServiceImpl implements SkuSearchService {
         //AggregatedPage<SkuEs> page = (AggregatedPage<SkuEs>) skuSearchMapper.search(queryBuilder.build());
 
         //2.将非高亮数据替换成高亮数据
-        AggregatedPage<SkuEs> page = elasticsearchRestTemplate.queryForPage(queryBuilder.build(), SkuEs.class,new HighlightResultMapper());
+        AggregatedPage<SkuEs> page = elasticsearchRestTemplate.queryForPage(queryBuilder.build(), SkuEs.class, new HighlightResultMapper());
 
         //获取结果集：集合列表、总记录数
         Map<String, Object> resultMap = new HashMap<>();
@@ -74,7 +71,11 @@ public class SkuSearchServiceImpl implements SkuSearchService {
         attrParse(resultMap);
 
         List<SkuEs> skuEsList = page.getContent();
-        resultMap.put("totalElements", page.getTotalElements());
+
+        //创建分页对象
+        int currentPage = queryBuilder.build().getPageable().getPageNumber() + 1;
+        PageInfo pageInfo = new PageInfo(page.getTotalElements(), currentPage, 5);
+        resultMap.put("pageInfo", pageInfo);
         resultMap.put("list", skuEsList);
         return resultMap;
     }
