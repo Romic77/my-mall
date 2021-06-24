@@ -2,6 +2,7 @@ package com.example.mall.controller;
 
 import com.example.goods.model.Sku;
 import com.example.mall.service.SkuService;
+import com.example.model.Cart;
 import com.example.util.RespResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,17 @@ public class SkuController {
 
     @Autowired
     private SkuService skuService;
+
+    /**
+     * 库存递减
+     * @param id
+     * @return
+     */
+    @PostMapping("/dcount")
+    public RespResult decount(@RequestBody List<Cart> cartList){
+        skuService.decrease(cartList);
+        return RespResult.ok();
+    }
 
     @GetMapping("/{id}")
     public  RespResult<Sku> findProductById(@PathVariable("id")String id){

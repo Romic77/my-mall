@@ -2,6 +2,7 @@ package com.example.mall.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.goods.model.Sku;
+import com.example.model.Cart;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface SkuService extends IService<Sku> {
     void delTypeSkuItems(Integer id);
 
     List<Sku> updateTypeSkuItems(Integer id);
+
+    void decrease(List<Cart> cartList);
 }

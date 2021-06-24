@@ -1,6 +1,7 @@
 package com.example.goods.feign;
 
 import com.example.goods.model.Sku;
+import com.example.model.Cart;
 import com.example.util.RespResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,10 @@ import java.util.List;
 @FeignClient("mall-goods")
 @RequestMapping("/sku")
 public interface SkuFeign {
+
+    @PostMapping("/dcount")
+    RespResult decount(@RequestBody List<Cart> cartList);
+
     @GetMapping("/aditems/type")
     public List<Sku> typeItems(@RequestParam("id") Integer id);
 
@@ -25,5 +30,5 @@ public interface SkuFeign {
     public RespResult<List<Sku>> updateTypeItems(@RequestParam("id") Integer id);
 
     @GetMapping("/{id}")
-    public  RespResult findProductById(@PathVariable("id")String id);
+    public RespResult findProductById(@PathVariable("id") String id);
 }

@@ -19,6 +19,7 @@
         <module>mall-search-service</module>
         <module>mall-cart-service</module>
         <module>mall-user-service</module>
+        <module>mall-order-service</module>
     </modules>
 
     <properties>

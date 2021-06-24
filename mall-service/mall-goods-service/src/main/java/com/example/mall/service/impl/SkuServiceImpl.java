@@ -7,6 +7,7 @@ import com.example.goods.model.Sku;
 import com.example.mall.mapper.AdItemsMapper;
 import com.example.mall.mapper.SkuMapper;
 import com.example.mall.service.SkuService;
+import com.example.model.Cart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -72,5 +73,19 @@ public class SkuServiceImpl extends ServiceImpl<SkuMapper, Sku> implements SkuSe
         //2. 根据推广列表查询产品信息
         List<String> skuIdList = adItemsList.stream().map(AdItems::getSkuId).collect(Collectors.toList());
         return skuMapper.selectBatchIds(skuIdList);
+    }
+
+    /**
+     * 库存递减
+     * @param cartList
+     */
+    @Override
+    public void decrease(List<Cart> cartList) {
+        for (Cart cart : cartList) {
+            int count= skuMapper.decrease(cart.getSkuId(),cart.getNum());
+            if (count <= 0) {
+                throw new RuntimeException("库存不足");
+            }
+        }
     }
 }
