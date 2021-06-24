@@ -78,6 +78,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setTotalNum(totalNum);
         order.setMoneys(moneys);
         orderMapper.insert(order);
+
+        //5. 删除购物车
+        cartFeign.deleteByIds(order.getCartIds());
         return true;
 
     }
