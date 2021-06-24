@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Date: Created in 2021-06-24 16:17
  */
 @SpringBootApplication
-@MapperScan(basePackages = {"com.example.mapper"})
+@MapperScan(basePackages = {"com.example.user.mapper"})
 public class UserApplication {
     public static void main(String[] args) {
         SpringApplication.run(UserApplication.class,args);

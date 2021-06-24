@@ -28,5 +28,5 @@ public class Address implements Serializable {
     private String phone;
     private String address;
     private String contact;
-    private String idDefault;
+    private Integer isDefault;
 }

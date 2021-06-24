@@ -3,9 +3,7 @@ package com.example.feign;
 import com.example.model.Cart;
 import com.example.util.RespResult;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,13 +17,13 @@ public interface CartFeign {
     /**
      * 删除选中id集合的购物车数据
      */
-    @DeleteMapping
+    @DeleteMapping("/cart")
     public RespResult deleteByIds(@RequestBody List<String> ids) ;
 
 
     /**
      * 选中id集合的购物车数据
      */
-    @PostMapping("/list")
+    @GetMapping("/cart/list")
     public RespResult<List<Cart>> getCartByIds(@RequestBody List<String> ids) ;
 }

@@ -28,6 +28,6 @@ public class AddressController {
      */
     @GetMapping("/list")
     public RespResult<List<Address>> list() {
-        return RespResult.ok(addressService.addressList(""));
+        return RespResult.ok(addressService.addressList("zs"));
     }
 }

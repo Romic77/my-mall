@@ -15,6 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/cart")
+@CrossOrigin
 public class CartController {
     @Autowired
     private CartService cartService;
@@ -42,7 +43,7 @@ public class CartController {
      * @param id  商品id
      * @param num 商品数量
      */
-    @PostMapping("/{id}/{num}")
+    @GetMapping("/{id}/{num}")
     public void save(@PathVariable("id") String id, @PathVariable("num") Integer num) {
         cartService.save(id, "zs", num);
     }
@@ -53,8 +54,8 @@ public class CartController {
      */
     @GetMapping("/list")
     public RespResult<List<Cart>> list() {
-        String userId = "";
-        List<Cart> cartList = cartService.cartList(userId);
+        String userName = "zs";
+        List<Cart> cartList = cartService.cartList(userName);
         return RespResult.ok(cartList);
     }
 }

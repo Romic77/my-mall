@@ -11,9 +11,7 @@
 
     <artifactId>mall-order-api</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>mall-order-service</module>
-    </modules>
+
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

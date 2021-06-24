@@ -1,5 +1,6 @@
 package com.example.order.controller;
 
+
 import com.example.order.model.Order;
 import com.example.order.service.OrderService;
 import com.example.util.RespResult;
@@ -23,7 +24,7 @@ public class OrderController {
      */
     @PostMapping
     public RespResult add(@RequestBody Order order){
-        order.setUsername("");
+        order.setUsername("zs");
         orderService.add(order);
         return RespResult.ok();
     }

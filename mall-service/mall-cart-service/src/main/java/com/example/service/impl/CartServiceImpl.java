@@ -63,6 +63,7 @@ public class CartServiceImpl implements CartService {
                 cart.setUserName(userName);
                 cart.setName(sku.getName());
                 cart.setImage(sku.getImage());
+                cart.setPrice(sku.getPrice());
                 cart.setSkuId(id);
                 cart.setNum(num);
                 cartMapper.save(cart);

@@ -19,13 +19,13 @@ import java.io.Serializable;
 @Data
 @TableName("order_sku")
 public class OrderSku implements Serializable {
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)
     private String id;
     private String image;
     private String skuId;
     private String orderId;
     private String name;
     private Integer price;
-    private Integer num;
-    private Integer money;
+    private Integer num;    //数量
+    private Integer money;  //总金额
 }

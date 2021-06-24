@@ -37,6 +37,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Autowired
     private OrderMapper orderMapper;
+
     /**
      * 添加订单
      *
@@ -65,8 +66,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         for (Cart cart : cartList) {
             OrderSku orderSku = JSON.parseObject(JSON.toJSONString(cart), OrderSku.class);
             orderSku.setId(IdWorker.getIdStr());
-            orderSku.setOrderId(order.getId());
-            orderSku.setMoney(orderSku.getNum() * orderSku.getPrice());
+            orderSku.setOrderId(order.getId()); //提前赋值
+            orderSku.setMoney(orderSku.getPrice() * orderSku.getNum());
             //添加
             orderSkuMapper.insert(orderSku);
 

@@ -30,5 +30,5 @@ public interface SkuFeign {
     public RespResult<List<Sku>> updateTypeItems(@RequestParam("id") Integer id);
 
     @GetMapping("/{id}")
-    public RespResult findProductById(@PathVariable("id") String id);
+    public RespResult<Sku> findProductById(@PathVariable("id") String id);
 }

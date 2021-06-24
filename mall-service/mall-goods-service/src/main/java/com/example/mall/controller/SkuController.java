@@ -16,6 +16,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sku")
+@CrossOrigin
 public class SkuController {
 
     @Autowired
@@ -34,7 +35,8 @@ public class SkuController {
 
     @GetMapping("/{id}")
     public  RespResult<Sku> findProductById(@PathVariable("id")String id){
-        return RespResult.ok(skuService.getById(id));
+        Sku sku=skuService.getById(id);
+        return RespResult.ok(sku);
     }
 
     /**
