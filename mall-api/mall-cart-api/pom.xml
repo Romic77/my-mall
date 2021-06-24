@@ -3,23 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>my-mall</artifactId>
+        <artifactId>mall-api</artifactId>
         <groupId>com.example</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mall-service</artifactId>
-    <packaging>pom</packaging>
-    <description>存储所有微服务工程</description>
-    <modules>
-        <module>mall-goods-service</module>
-        <module>mall-file-service</module>
-        <module>mall-canal-service</module>
-        <module>mall-search-service</module>
-        <module>mall-cart-service</module>
-        <module>mall-user-service</module>
-    </modules>
+    <artifactId>mall-cart-api</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -28,16 +18,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>mall-service-dependency</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>2.2.5.RELEASE</version>
         </dependency>
-
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>mall-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
-
     </dependencies>
+
 </project>

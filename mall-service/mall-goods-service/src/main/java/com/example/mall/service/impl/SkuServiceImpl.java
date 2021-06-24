@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @CacheConfig(cacheNames = "ad-items-skus")
-public class SkuServiceImpl extends ServiceImpl<AdItemsMapper, AdItems> implements SkuService {
+public class SkuServiceImpl extends ServiceImpl<SkuMapper, Sku> implements SkuService {
 
     @Autowired
     private AdItemsMapper adItemsMapper;

@@ -20,6 +20,11 @@ public class SkuController {
     @Autowired
     private SkuService skuService;
 
+    @GetMapping("/{id}")
+    public  RespResult<Sku> findProductById(@PathVariable("id")String id){
+        return RespResult.ok(skuService.getById(id));
+    }
+
     /**
      * 根据推广分类查询推广产品列表
      * cacheNames: 是Redis 命名空间

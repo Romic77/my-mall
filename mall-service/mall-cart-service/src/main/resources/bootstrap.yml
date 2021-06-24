@@ -1,0 +1,22 @@
+server:
+  port: 8087
+spring:
+  application:
+    name: mall-cart
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+        server-addr: localhost:8848
+      discovery:
+        server-addr: localhost:8848
+  data:
+    mongodb:
+      uri: mongodb://sh:123456@192.168.116.135:27017/shop
+  main:
+    allow-bean-definition-overriding: true
+
+#日志配置
+logging:
+  pattern:
+    console: "%msg%n"
