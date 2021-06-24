@@ -78,6 +78,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setTotalNum(totalNum);
         order.setMoneys(moneys);
         orderMapper.insert(order);
+        return true;
 
     }
 }
