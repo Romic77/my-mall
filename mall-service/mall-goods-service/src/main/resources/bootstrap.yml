@@ -16,6 +16,9 @@ spring:
       discovery:
         #Nacos的注册地址
         server-addr: localhost:8848
+    alibaba:
+      seata:
+        tx-service-group: tx_shop
   redis:
     host: 127.0.0.1
     port: 6379
@@ -32,3 +35,4 @@ mybatis-plus:
 logging:
   pattern:
     console: "%msg%n"
+

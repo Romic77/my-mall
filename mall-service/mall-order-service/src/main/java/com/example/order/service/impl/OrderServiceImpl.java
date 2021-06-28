@@ -12,6 +12,7 @@ import com.example.order.model.Order;
 import com.example.order.model.OrderSku;
 import com.example.order.service.OrderService;
 import com.example.util.RespResult;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      * @param order
      * @return
      */
+    @GlobalTransactional
     @Override
     public boolean add(Order order) {
         order.setId(IdWorker.getIdStr());
@@ -75,6 +77,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             moneys += orderSku.getMoney();
         }
 
+        //int a =1/0;
         //4. 添加订单
         order.setTotalNum(totalNum);
         order.setMoneys(moneys);

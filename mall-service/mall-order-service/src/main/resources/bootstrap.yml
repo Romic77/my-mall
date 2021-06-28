@@ -16,6 +16,9 @@ spring:
       discovery:
         #Nacos的注册地址
         server-addr: localhost:8848
+    alibaba:
+      seata:
+        tx-service-group: tx_shop
   main:
     allow-bean-definition-overriding: true
 # ====================MybatisPlus====================
