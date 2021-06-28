@@ -6,10 +6,10 @@ SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `pay_log`;
 CREATE TABLE `pay_log` (
-                                    `id` int(11) NOT NULL,
+                                    `id` String(50) NOT NULL,
                                     `status` int(1) DEFAULT NULL COMMENT '支付状态',
                                     `content` varchar(20) DEFAULT NULL COMMENT '支付内容',
-                                    `payId` varchar(20) DEFAULT NULL COMMENT '支付id',
-                                    `createTime` datetime DEFAULT NULL COMMENT '创建时间',
+                                    `pay_id` varchar(20) DEFAULT NULL COMMENT '支付id',
+                                    `create_time` datetime DEFAULT NULL COMMENT '创建时间',
                                     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
