@@ -34,7 +34,7 @@ public class WeixinPayController {
         Message<String> message= MessageBuilder.withPayload(JSON.toJSONString(payLog)).build();
 
         //发消息
-        rocketMQTemplate.sendMessageInTransaction("rocket", "log", message,null );
+        //rocketMQTemplate.sendMessageInTransaction("rocket", "log", message,null );
         return RespResult.ok();
     }
 }

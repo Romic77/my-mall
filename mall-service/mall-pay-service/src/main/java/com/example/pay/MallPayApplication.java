@@ -6,6 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan(basePackages = "com.example")
+/**
+ * ./mqbroker.cmd -n 127.0.0.1:9876 autoCreateTopicEnable=true
+ */
 public class MallPayApplication {
 
     public static void main(String[] args) {

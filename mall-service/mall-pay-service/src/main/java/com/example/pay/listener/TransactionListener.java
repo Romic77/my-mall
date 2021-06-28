@@ -11,7 +11,7 @@ import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 @Component
-@RocketMQTransactionListener(txProducerGroup = "rocket")
+@RocketMQTransactionListener
 public class TransactionListener implements RocketMQLocalTransactionListener {
     @Autowired
     private PayLogService payLogService;
