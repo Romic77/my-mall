@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan(basePackages = "com.example")
+@MapperScan(basePackages = {"com.example.pay.mapper"})
 /**
  * ./mqbroker.cmd -n 127.0.0.1:9876 autoCreateTopicEnable=true
  */

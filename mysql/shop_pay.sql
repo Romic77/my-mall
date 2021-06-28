@@ -4,8 +4,8 @@ create database `shop_pay` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general
 SET FOREIGN_KEY_CHECKS=0;
 
 
-DROP TABLE IF EXISTS `shop_pay.pay_log`;
-CREATE TABLE `shop_pay.pay_log` (
+DROP TABLE IF EXISTS `pay_log`;
+CREATE TABLE `pay_log` (
                                     `id` int(11) NOT NULL,
                                     `status` int(1) DEFAULT NULL COMMENT '支付状态',
                                     `content` varchar(20) DEFAULT NULL COMMENT '支付内容',
