@@ -4,13 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.example.pay.model.PayLog;
 import com.example.pay.service.WeiXinPayService;
-import com.example.util.RespResult;
-import com.example.util.Signature;
+import com.example.util.*;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,9 @@ public class WeixinPayController {
 
     @Autowired
     private Signature signature;
+
+    @Value("payconfig.weixin.skey")
+    private String skey;
 
     /**
      * 支付结果回调
@@ -73,8 +77,8 @@ public class WeixinPayController {
 
         //响应给微信服务器的数据
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("return_code","SUCCESS");
-        resultMap.put("return_msg","OK");
+        resultMap.put("return_code", "SUCCESS");
+        resultMap.put("return_msg", "OK");
         return WXPayUtil.mapToXml(resultMap);
     }
 
@@ -98,26 +102,16 @@ public class WeixinPayController {
         String xmlResult = new String(os.toByteArray(), "UTF-8");
         Map<String, String> map = WXPayUtil.xmlToMap(xmlResult);
 
-        //判断支付结果状态 2成功,7失败
-        int status = 7;
-        if (StringUtils.equals(map.get("return_code"), WXPayConstants.SUCCESS)
-                && StringUtils.equals(map.get("result_code"), WXPayConstants.SUCCESS)) {
-            status = 2;
-        }
+        //获取退款信息
+        String reqinfo = map.get("req_info");
+        String key = MD5.md5(skey);
+        byte[] decode = AESUtil.encryptAndDecrypt(Base64Util.decode(reqinfo), key, 2);
 
-        //创建日志对象
-        PayLog payLog = new PayLog(IdWorker.getIdStr(), status, JSON.toJSONString(map), map.get("out_trade_no"), new Date());
-
-        //构建消息
-        Message<String> message = MessageBuilder.withPayload(JSON.toJSONString(payLog)).build();
-
-        //发消息
-        rocketMQTemplate.sendMessageInTransaction("log", message, null);
 
         //响应给微信服务器的数据
         Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("return_code","SUCCESS");
-        resultMap.put("return_msg","OK");
+        resultMap.put("return_code", "SUCCESS");
+        resultMap.put("return_msg", "OK");
         return WXPayUtil.mapToXml(resultMap);
     }
 
