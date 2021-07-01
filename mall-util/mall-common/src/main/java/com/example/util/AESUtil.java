@@ -1,7 +1,6 @@
 package com.example.util;
 
-import com.example.util.Base64Util;
-import com.example.util.MD5;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;

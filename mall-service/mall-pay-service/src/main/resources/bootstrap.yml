@@ -49,3 +49,23 @@ rocketmq:
     retry-times-when-send-async-failed: 0
     retry-next-server: true
     retry-times-when-send-failed: 2
+
+#支付配置
+payconfig:
+  weixin:
+    #应用ID
+    appId: wx9f1fa58451efa9b2
+    #商户ID号
+    mchID: 157请自行申请561
+    #秘钥
+    key: QS8rrOI出于安全考虑，请自行申请TQCfI1
+    #默认回调地址
+    notifyUrl: http://2cw4969042.wicp.vip:50381/wx/result
+    #证书存储路径
+    certPath: D:/alibaba/dev/shop/gupaoedu-vip-mall/mall-service/mall-pay-service/src/main/resources/apiclient_cert.p12
+  #支付安全校验(验签)
+  aes:
+    #AES加密秘钥
+    skey: ab2cc473d3334c39
+    #验签盐
+    salt: XPYQZb1kMES8HNaJWW8+TDu/4JdBK4owsU9eXCXZDOI=
