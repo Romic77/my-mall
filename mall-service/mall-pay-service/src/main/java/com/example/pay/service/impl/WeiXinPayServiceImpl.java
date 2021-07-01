@@ -56,6 +56,17 @@ public class WeiXinPayServiceImpl implements WeiXinPayService {
     }
 
     /**
+     * 申请退款
+     * @param dataMap
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Map<String, String> refund(Map<String, String> dataMap) throws Exception {
+        return wxPay.refund(dataMap);
+    }
+
+    /**
      * 支付状态
      */
     public int tradeState(String tradeState) {

@@ -20,4 +20,9 @@ public interface WeiXinPayService {
      * @param  outno 订单编号
      */
     PayLog result(String outno) throws Exception;
+
+    /**
+     * 退款申请
+     */
+    Map<String, String> refund(Map<String,String> dataMap) throws Exception;
 }
