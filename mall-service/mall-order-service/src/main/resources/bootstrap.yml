@@ -43,3 +43,12 @@ feign:
 #producer
 rocketmq:
   name-server: 127.0.0.1:9876
+
+#支付配置
+payconfig:
+  #支付安全校验
+  aes:
+    #AES加密秘钥
+    skey: ab2cc473d3334c39
+    #验签盐
+    salt: XPYQZb1kMES8HNaJWW8+TDu/4JdBK4owsU9eXCXZDOI=

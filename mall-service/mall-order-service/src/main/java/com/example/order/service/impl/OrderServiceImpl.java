@@ -1,6 +1,7 @@
 package com.example.order.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.feign.CartFeign;
@@ -87,5 +88,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         cartFeign.deleteByIds(order.getCartIds());
         return true;
 
+    }
+
+    @Override
+    public int updateAfterPayStatus(String id) {
+        //修改后的状态
+        Order order = new Order();
+        order.setId(id);
+        order.setPayStatus(1); //已支付
+        order.setOrderStatus(1); //待发货
+
+        //修改条件
+        QueryWrapper<Order> queryWrapper = new QueryWrapper<Order>();
+        queryWrapper.eq("id", id);
+        queryWrapper.eq("order_status", 0);
+        queryWrapper.eq("pay_status", 0);
+        return orderMapper.update(order, queryWrapper);
     }
 }

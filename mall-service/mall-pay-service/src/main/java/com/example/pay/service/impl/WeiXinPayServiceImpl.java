@@ -3,6 +3,7 @@ package com.example.pay.service.impl;
 import com.example.pay.service.WeiXinPayService;
 import com.github.wxpay.sdk.WXPay;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import java.util.Map;
  * @Description:
  * @Date: Created in 2021-07-01 13:12
  */
+@Service
 public class WeiXinPayServiceImpl implements WeiXinPayService {
     @Autowired
     private WXPay wxPay;
