@@ -10,6 +10,7 @@ import com.example.model.Cart;
 import com.example.order.mapper.OrderMapper;
 import com.example.order.mapper.OrderSkuMapper;
 import com.example.order.model.Order;
+import com.example.order.model.OrderRefund;
 import com.example.order.model.OrderSku;
 import com.example.order.service.OrderService;
 import com.example.util.RespResult;
@@ -40,6 +41,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private OrderRefund orderRefund;
+
     /**
      * 添加订单
      *
@@ -53,7 +57,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setCreateTime(new Date());
         order.setUpdateTime(new Date());
 
-        //1. 查询购物车数据
+        //1. 根据页面传递的商品skuid 查询购物车数据
         RespResult<List<Cart>> result = cartFeign.getCartByIds(order.getCartIds());
         List<Cart> cartList = result.getData();
         if (cartList == null || cartList.size() == 0) {
@@ -104,5 +108,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         queryWrapper.eq("order_status", 0);
         queryWrapper.eq("pay_status", 0);
         return orderMapper.update(order, queryWrapper);
+    }
+
+    @Override
+    public void refund(OrderRefund orderRefund) {
+
     }
 }

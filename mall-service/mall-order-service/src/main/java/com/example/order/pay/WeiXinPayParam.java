@@ -1,9 +1,11 @@
 package com.example.order.pay;
 
 import com.example.order.model.Order;
+import com.example.order.model.OrderRefund;
 import com.example.util.Signature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +31,28 @@ public class WeiXinPayParam {
         data.put("device_info", "PC");
         data.put("fee_type", "CNY");    // 币种
         //data.put("total_fee", String.valueOf(order.getMoneys()*100));     //支付金额
-        data.put("total_fee","1");     //支付金额
+        data.put("total_fee", "1");     //支付金额
         data.put("spbill_create_ip", IPUtils.getIpAddr(request));  //客户端IP
         data.put("notify_url", "http://2cw4969042.wicp.vip:48847/wx/result");  //回调地址（支付结果通知地址）
         data.put("trade_type", "NATIVE");  // 此处指定为扫码支付
+
+        // TrreMap->MD5->Map->JSON->AES
+        return signature.security(data);
+    }
+
+    /**
+     * 退款数据处理
+     */
+    public String weixinRefundParam(OrderRefund orderRefund) throws Exception {
+        //预支付下单需要用到的数据
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("out_trade_no", orderRefund.getOrderNo());    //订单号
+        data.put("out_refund_no", orderRefund.getId());
+        data.put("total_fee", "1");    // 币种
+        //data.put("total_fee", String.valueOf(order.getMoneys()*100));     //支付金额
+        data.put("refund_fee", "1");     //支付金额
+        data.put("notify_url", "http://xxx/wx/refund/result");
+
 
         // TrreMap->MD5->Map->JSON->AES
         return signature.security(data);
