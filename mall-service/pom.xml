@@ -21,6 +21,7 @@
         <module>mall-user-service</module>
         <module>mall-order-service</module>
         <module>mall-pay-service</module>
+        <module>mall-seckill-service</module>
     </modules>
 
     <properties>
