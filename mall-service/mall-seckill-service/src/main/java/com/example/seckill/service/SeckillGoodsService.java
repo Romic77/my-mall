@@ -9,4 +9,5 @@ import com.example.seckill.model.SeckillGoods;
  * @Date: Created in 2021-07-09 16:44
  */
 public interface SeckillGoodsService extends IService<SeckillGoods> {
+    SeckillGoods one(String id);
 }

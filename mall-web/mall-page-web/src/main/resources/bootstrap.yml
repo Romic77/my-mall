@@ -15,7 +15,10 @@ spring:
     encoding: utf-8
   main:
     allow-bean-definition-overriding: true
+#页面生成路径
 pagepath: D:/workspace/frant
+#秒杀页面生成路径
+seckillpath: D:/workspace/frant
 logging:
   pattern:
     console: "%msg%n"
