@@ -15,7 +15,7 @@ import java.util.Date;
  * @Date: Created in 2021-07-09 17:20
  */
 @Data
-@Document(indexName = "shopsearch", type = "seckillgoodses")
+@Document(indexName = "shopseckill", type = "seckillgoodses")
 public class SeckillGoodsEs implements Serializable {
     @Id
     private String id;
