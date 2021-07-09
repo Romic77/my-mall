@@ -12,4 +12,10 @@ public interface SeckillGoodsSearchService {
      * 秒杀商品导入es
      */
     void add(SeckillGoodsEs seckillGoodsEs);
+
+    /**
+     * 删除es商品
+     * @param id
+     */
+    void del(String id);
 }

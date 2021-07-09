@@ -20,4 +20,9 @@ public class SeckillGoodsSearchServiceImpl implements SeckillGoodsSearchService 
     public void add(SeckillGoodsEs seckillGoodsEs) {
         seckillGoodsSearchMapper.save(seckillGoodsEs);
     }
+
+    @Override
+    public void del(String id) {
+        seckillGoodsSearchMapper.deleteById(id);
+    }
 }

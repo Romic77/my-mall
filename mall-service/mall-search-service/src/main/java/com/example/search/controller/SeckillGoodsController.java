@@ -4,10 +4,7 @@ import com.example.search.model.SeckillGoodsEs;
 import com.example.search.service.SeckillGoodsSearchService;
 import com.example.util.RespResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: chenq
@@ -26,6 +23,12 @@ public class SeckillGoodsController {
     @PostMapping("/import")
     public RespResult add(@RequestBody SeckillGoodsEs seckillGoodsEs) {
         seckillGoodsSearchService.add(seckillGoodsEs);
+        return RespResult.ok();
+    }
+
+    @DeleteMapping("/del/{id}")
+    public RespResult del(@PathVariable("id")String id){
+        seckillGoodsSearchService.del(id);
         return RespResult.ok();
     }
 }
