@@ -22,3 +22,9 @@ logging:
     console: "%msg%n"
   level:
     root: error
+
+
+
+#动态定时任务案例
+dynamiczk: localhost:2181
+dynamicnamespace: dynamictask

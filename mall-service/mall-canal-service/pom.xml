@@ -23,6 +23,19 @@
             <version>1.2.1-RELEASE</version>
         </dependency>
 
+        <!-- ElasticJobAutoConfiguration自动配置类作用-->
+        <dependency>
+            <groupId>com.github.kuhn-he</groupId>
+            <artifactId>elastic-job-lite-spring-boot-starter</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>mall-seckill-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>mall-goods-api</artifactId>
