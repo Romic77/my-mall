@@ -24,6 +24,6 @@ public interface SeckillPageFeign {
     /***
      * 删除指定活动的页面
      */
-    @DeleteMapping(value = "/page/seckill/goods/{acid}")
+    @DeleteMapping(value = "/seckill/goods/{acid}")
     RespResult deleByAct(@PathVariable("acid")String acid);
 }

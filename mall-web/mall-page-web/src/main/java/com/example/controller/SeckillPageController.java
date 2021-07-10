@@ -32,7 +32,7 @@ public class SeckillPageController {
      */
     @DeleteMapping(value = "/seckill/goods/{acid}")
     public RespResult deleByAct(@PathVariable("acid")String acid){
-        //1.查询当前活动ID对应的商品列表数据\
+        //1.查询当前活动ID对应的商品列表数据
         RespResult<List<SeckillGoods>> listRespResult = seckillGoodsFeign.actGoods(acid);
         List<SeckillGoods> goodsList = listRespResult.getData();
         //2.根据列表数据删除页面
