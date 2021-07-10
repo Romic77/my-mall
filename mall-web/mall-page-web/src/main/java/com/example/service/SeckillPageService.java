@@ -16,4 +16,6 @@ public interface SeckillPageService {
 
 
     void html(@PathVariable("id")String id) throws Exception;
+
+    void delete(String id);
 }

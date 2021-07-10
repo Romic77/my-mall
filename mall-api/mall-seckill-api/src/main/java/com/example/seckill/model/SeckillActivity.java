@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -18,11 +20,15 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("seckill_activity")
+@Table
 public class SeckillActivity {
     @TableId(type = IdType.ASSIGN_ID)
     private String id;
+    @Column(name = "activity_name")
     private String activityName;
     private Integer type;
+    @Column(name = "start_time")
     private Date startTime;
+    @Column(name = "end_time")
     private Date endTime;
 }

@@ -54,6 +54,15 @@ public class SeckillPageServiceImpl implements SeckillPageService {
         templateEngine.process("seckillitem", context, writer);
     }
 
+    @Override
+    public void delete(String id) {
+        //创建要删除的文件对象
+        File file = new File(seckillpath,id+".html");
+        if(file.exists()){
+            file.delete();
+        }
+    }
+
     /**
      * 数据加载
      */
