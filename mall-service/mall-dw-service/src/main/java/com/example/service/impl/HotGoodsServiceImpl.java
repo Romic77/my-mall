@@ -5,6 +5,8 @@ import com.example.mapper.HotGoodsMapper;
 import com.example.model.HotGoods;
 import com.example.service.HotGoodsService;
 import com.example.util.DruidPage;
+import com.example.util.TimeUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,19 @@ import java.util.List;
 public class HotGoodsServiceImpl extends ServiceImpl<HotGoodsMapper, HotGoods> implements HotGoodsService {
     @Autowired
     private HotGoodsMapper hotGoodsMapper;
+
+    @Override
+    public List<HotGoods> searchExclude(Integer size, Integer hour, String[] urls) {
+        //urls拼接
+        String urlString = StringUtils.join(urls, "','");
+        hotGoodsMapper.searchExclude(size, TimeUtil.beforeTime(TimeUtil.unit_hour, hour), urlString);
+        return null;
+    }
+
+    @Override
+    public List<HotGoods> search(Integer size, Integer hour) {
+        return hotGoodsMapper.search(size, TimeUtil.beforeTime(TimeUtil.unit_hour, hour));
+    }
 
     @Override
     public List<HotGoods> topNum(Integer size) {

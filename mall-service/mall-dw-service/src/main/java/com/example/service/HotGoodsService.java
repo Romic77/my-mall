@@ -12,6 +12,20 @@ import java.util.List;
  * @Date: Created in 2021-07-19 10:22
  */
 public interface HotGoodsService extends IService<HotGoods> {
+    /**
+     * 时间查询
+     * @param size
+     * @return
+     */
+    List<HotGoods> searchExclude(Integer size, Integer hour,String[] urls);
+
+
+    /**
+     * 时间查询
+     * @param size
+     * @return
+     */
+    List<HotGoods> search(Integer size, Integer hour);
 
     List<HotGoods> topNum(Integer size);
 

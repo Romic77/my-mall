@@ -5,10 +5,7 @@ import com.example.service.HotGoodsService;
 import com.example.util.DruidPage;
 import com.example.util.RespResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,5 +54,24 @@ public class HotGoodsController {
     public RespResult<DruidPage<List<HotGoods>>> pageList(@PathVariable("page") Integer page, @PathVariable("size") Integer size,
                                                           @PathVariable("sort") String sort, @PathVariable("sortType") String sortType) {
         return RespResult.ok(hotGoodsService.pageListSort(page, size, sort, sortType));
+    }
+
+    /**
+     * 时间查询
+     */
+    @GetMapping("/search/{size}/{hour}")
+    public RespResult<List<HotGoods>> search(@PathVariable("size") Integer size, @PathVariable("hour") Integer hour) {
+
+        return RespResult.ok(hotGoodsService.search(size, hour));
+    }
+
+    /**
+     * 时间查询
+     */
+    @PostMapping("/search/{size}/{hour}")
+    public RespResult<List<HotGoods>> searchExclude(@PathVariable("size") Integer size, @PathVariable("hour") Integer hour
+            ,@RequestBody String[] urls) {
+
+        return RespResult.ok(hotGoodsService.searchExclude(size, hour, urls));
     }
 }
