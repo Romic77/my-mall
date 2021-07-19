@@ -23,6 +23,7 @@
       <module>mall-order-api</module>
       <module>mall-pay-pai</module>
       <module>mall-seckill-api</module>
+      <module>mall-dw-api</module>
   </modules>
   <name>mall-api</name>
   <!-- FIXME change it to the project's website -->
