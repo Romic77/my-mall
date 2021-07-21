@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: chenq
@@ -70,8 +71,18 @@ public class HotGoodsController {
      */
     @PostMapping("/search/{size}/{hour}")
     public RespResult<List<HotGoods>> searchExclude(@PathVariable("size") Integer size, @PathVariable("hour") Integer hour
-            ,@RequestBody String[] urls) {
+            , @RequestBody String[] urls) {
 
         return RespResult.ok(hotGoodsService.searchExclude(size, hour, urls));
+    }
+
+    /**
+     * 热门商品分析
+     */
+    @PostMapping("/search/{size}/{hour}/{max}")
+    public RespResult<List<Map<String, String>>> searchHotGoods(@PathVariable("size") Integer size, @PathVariable("hour") Integer hour
+            , @RequestBody String[] urls, @PathVariable("max") Integer max) {
+
+        return RespResult.ok(hotGoodsService.searchHotGoods(size, hour, urls, max));
     }
 }

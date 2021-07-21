@@ -1,0 +1,29 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: mall-geteway
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+        server-addr: localhost:8848
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      routes:
+        #秒杀
+        - id: seckill_route
+          uri: lb://mall-seckill
+          predicates:
+            - Path=/mall/**
+          filters:
+            - StripPrefix=1
+#日志配置
+logging:
+  pattern:
+    console: "%msg%n"
+
+
+
+

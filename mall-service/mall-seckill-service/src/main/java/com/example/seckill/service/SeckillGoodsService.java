@@ -15,4 +15,7 @@ public interface SeckillGoodsService extends IService<SeckillGoods> {
 
     //根据活动ID查询商品信息
     List<SeckillGoods> actGoods(String acid);
+
+    //热门商品分离 uri商品id
+    void isolation(String uri);
 }

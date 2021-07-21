@@ -5,10 +5,10 @@
     <packaging>pom</packaging>
     <modules>
         <module>mall-api</module>
-        <module>mall-getway</module>
         <module>mall-service</module>
         <module>mall-util</module>
         <module>mall-web</module>
+        <module>mall-gateway</module>
     </modules>
 
     <parent>

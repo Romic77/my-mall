@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: chenq
@@ -23,11 +24,17 @@ public class HotGoodsServiceImpl extends ServiceImpl<HotGoodsMapper, HotGoods> i
     private HotGoodsMapper hotGoodsMapper;
 
     @Override
+    public List<Map<String, String>> searchHotGoods(Integer size, Integer hour, String[] urls, Integer max) {
+        //urls拼接
+        String urlString = StringUtils.join(urls, "','");
+        return hotGoodsMapper.searchHotGoods(size, TimeUtil.beforeTime(TimeUtil.unit_hour, hour), urlString, max);
+    }
+
+    @Override
     public List<HotGoods> searchExclude(Integer size, Integer hour, String[] urls) {
         //urls拼接
         String urlString = StringUtils.join(urls, "','");
-        hotGoodsMapper.searchExclude(size, TimeUtil.beforeTime(TimeUtil.unit_hour, hour), urlString);
-        return null;
+        return hotGoodsMapper.searchExclude(size, TimeUtil.beforeTime(TimeUtil.unit_hour, hour), urlString);
     }
 
     @Override

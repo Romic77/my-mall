@@ -39,4 +39,6 @@ public class SeckillGoods {
     private Integer storeCount;
     @Column(name = "activity_id")
     private String activityId;
+    //商品锁定状态 0未锁定 1已锁定
+    private Integer islock;
 }

@@ -5,6 +5,7 @@ import com.example.model.HotGoods;
 import com.example.util.DruidPage;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: chenq
@@ -12,6 +13,9 @@ import java.util.List;
  * @Date: Created in 2021-07-19 10:22
  */
 public interface HotGoodsService extends IService<HotGoods> {
+
+    List<Map<String, String>> searchHotGoods(Integer size, Integer hour, String[] urls, Integer max);
+
     /**
      * 时间查询
      * @param size

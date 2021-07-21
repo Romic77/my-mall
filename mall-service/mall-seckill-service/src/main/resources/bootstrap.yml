@@ -16,6 +16,20 @@ spring:
       discovery:
         #Nacos的注册地址
         server-addr: localhost:8848
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+elasticjob:
+  zookeeper:
+    server-lists: localhost:2181
+    namespace: hotsync
+hot:
+  size: 100 #查询条数
+  hour: 1  #N个小时的数据
+  max: 1 #每小时查询超过max次
+
+
 # ====================MybatisPlus====================
 mybatis-plus:
   mapper-locations: mapper/*.xml

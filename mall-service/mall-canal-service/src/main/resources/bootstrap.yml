@@ -16,7 +16,6 @@ canal:
   server: 192.168.116.135:11111
   destination: example
 #日志配置
-#日志配置
 logging:
   pattern:
     console: "%msg%n"
