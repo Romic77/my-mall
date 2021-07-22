@@ -29,7 +29,9 @@ hot:
   hour: 1  #N个小时的数据
   max: 1 #每小时查询超过max次
 
-
+#mq
+rocketmq:
+  name-server: localhost:9876
 # ====================MybatisPlus====================
 mybatis-plus:
   mapper-locations: mapper/*.xml

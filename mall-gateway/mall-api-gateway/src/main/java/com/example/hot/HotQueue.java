@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 排队操作
@@ -53,8 +54,8 @@ public class HotQueue {
             //请勿重复排队
             return HAS_QUEUQ;
         }
-
-
+        //过期
+        redisTempate.boundValueOps("OrderQueue" + username).expire(2, TimeUnit.MINUTES);
         //执行排队
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("username", username);
