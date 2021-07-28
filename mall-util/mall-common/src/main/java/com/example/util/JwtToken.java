@@ -10,82 +10,90 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class JwtToken {
-    //默认密钥
-    public static final String DEFAULT_SECRET = "springcloudalibaba";
 
-    /**
-     * @param dataMap body数据
-     * @param secret  密钥
-     * @return 返回jwt
+    //默认秘钥
+    private static final String DEFAULT_SECRET="springcloudalibaba";
+
+    /***
+     * 创建Jwt令牌
+     * 秘钥：secret
+     * 载荷:dataMap(Map)
      */
-    public static String createToken(Map<String, Object> dataMap, String secret) {
-        //密钥
-        if (StringUtils.isEmpty(secret)) {
+    public static String createToken(Map<String,Object> dataMap){
+        return createToken(dataMap,null);
+    }
+    /***
+     * 创建Jwt令牌
+     * 秘钥：secret
+     * 载荷:dataMap(Map)
+     */
+    public static String createToken(Map<String,Object> dataMap, String secret){
+        //确认秘钥
+        if(StringUtils.isEmpty(secret)){
             secret = DEFAULT_SECRET;
         }
 
-        //创建令牌算法
+        //确认签名算法
         Algorithm algorithm = Algorithm.HMAC256(secret);
 
-        //创建令牌
-        return JWT.create().withClaim("body", dataMap)
-                .withIssuer("my-mall")  //签发者
-                .withSubject("jwt") //主题
-                .withAudience("member") //接收jwt
-                .withExpiresAt(new Date(System.currentTimeMillis() + 3600000)) //过期时间
-                //.withNotBefore(new Date(System.currentTimeMillis()))  //指定时间之前JWT令牌是不可用的
-                .withIssuedAt(new Date()) //签发时间
-                .withJWTId(UUID.randomUUID().toString().replace("-", "")) //jwt唯一标识
-                .sign(algorithm);
-
+        //jwt令牌创建
+        return
+                JWT.create()
+                        .withClaim("body",dataMap)  //自定义载荷
+                        .withIssuer("GP")   //签发者
+                        .withSubject("JWT令牌")   //主题
+                        .withAudience("member") //接收方
+                        .withExpiresAt(new Date(System.currentTimeMillis()+3600000))    //过期时间
+                        .withNotBefore(new Date(System.currentTimeMillis()+1000))       //1秒后才能使用
+                        .withIssuedAt(new Date())   //签发时间
+                        .withJWTId(UUID.randomUUID().toString().replace("-",""))    //唯一标识符
+                        .sign(algorithm);
     }
 
-    /**
-     * 生成令牌
+    /****
+     * 令牌解析
      */
-    public static String createToken(Map<String, Object> dataMap) {
-        return createToken(dataMap, null);
+    public static Map<String,Object> parseToken(String token){
+        return parseToken(token,null);
     }
-
-
-    /**
-     * @param token  token参数
-     * @param secret 密钥
-     * @return body
+    /****
+     * 令牌解析
      */
-    public static Map<String, Object> parseToken(String token, String secret) {
-        //密钥为空就采用默认密钥
-        if (StringUtils.isEmpty(secret)) {
+    public static Map<String,Object> parseToken(String token,String secret){
+        //确认秘钥
+        if(StringUtils.isEmpty(secret)){
             secret = DEFAULT_SECRET;
         }
+
+        //确认签名算法
         Algorithm algorithm = Algorithm.HMAC256(secret);
-        JWTVerifier jwtVerifier = JWT.require(algorithm).build();
-        DecodedJWT jwt = jwtVerifier.verify(token);
+
+        //创建令牌校验对象
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        //校验解析
+        DecodedJWT jwt = verifier.verify(token);
         return jwt.getClaim("body").as(Map.class);
     }
 
-    /**
-     * @param token token参数
-     * @return
-     */
-    public static Map<String, Object> parseToken(String token) {
-        return parseToken(token, null);
-    }
-
-    public static void main(String[] args) {
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("name", "zhangsan");
-        dataMap.put("age", 26);
-        dataMap.put("address", "深圳");
+    public static void main(String[] args) throws InterruptedException {
+        //创建令牌
+        Map<String,Object> dataMap = new HashMap<String,Object>();
+        dataMap.put("name","zhangsan");
+        dataMap.put("address","湖南");
 
         //创建令牌
         String token = createToken(dataMap);
         System.out.println(token);
 
-        //解析令牌
-        Map<String, Object> resultMap = parseToken(token);
-        System.out.println(resultMap);
+        //休眠一秒钟
+        TimeUnit.SECONDS.sleep(1);
+
+        //校验解析令牌
+        Map<String, Object> stringObjectMap = parseToken(token);
+        System.out.println(stringObjectMap);
     }
 }
+
