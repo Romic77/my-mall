@@ -6,6 +6,8 @@ import com.example.interceptor.AuthorizationInterceptor;
 import com.example.util.IpUtil;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -27,6 +29,10 @@ import java.util.Map;
 public class ApiFilter implements GlobalFilter, Ordered {
     @Autowired
     private HotQueue hotQueue;
+    /**
+     * logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ApiFilter.class);
 
     @SneakyThrows
     @Override
@@ -42,15 +48,11 @@ public class ApiFilter implements GlobalFilter, Ordered {
 
         //客户端IP
         String ip = IpUtil.getIp(request);
+
         //用户令牌
         String token = request.getHeaders().getFirst("authorization");
         //令牌校验
         Map<String, Object> resultMap = AuthorizationInterceptor.jwtVerify(token, ip);
-        if (resultMap == null) {
-            endProcess(exchange, 401, "no token");
-        }
-
-
         if (resultMap == null) {
             endProcess(exchange, 401, "no token");
         }

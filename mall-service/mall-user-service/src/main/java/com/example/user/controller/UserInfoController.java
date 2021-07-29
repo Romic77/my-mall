@@ -8,6 +8,8 @@ import com.example.util.JwtToken;
 import com.example.util.MD5;
 import com.example.util.RespResult;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user/info")
 public class UserInfoController {
+    /**
+     * logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(UserInfoController.class);
     @Autowired
     private UserInfoService userInfoService;
 
@@ -42,8 +48,9 @@ public class UserInfoController {
 
                 //获取客户端ip
                 String ip = IpUtil.getIpAddr(request);
-                dataMap.put("ip", MD5.md5(ip));
-
+                String md5Ip=MD5.md5(ip);
+                dataMap.put("ip",md5Ip);
+                logger.info("当前ip为{};当前ip的md5为{}",ip,md5Ip);
                 //创建令牌
                 String token = JwtToken.createToken(dataMap);
                 return RespResult.ok(token);

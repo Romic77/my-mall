@@ -13,12 +13,12 @@ spring:
     gateway:
       routes:
         #秒杀
-        - id: seckill_route
-          uri: lb://mall-seckill
-          predicates:
-            - Path=/mall/**
-          filters:
-            - StripPrefix=1
+#        - id: seckill_route
+#          uri: lb://mall-seckill
+#          predicates:
+#            - Path=/mall/**
+#          filters:
+#            - StripPrefix=1
         #购物车
         - id: cart_route
           uri: lb://mall-cart
