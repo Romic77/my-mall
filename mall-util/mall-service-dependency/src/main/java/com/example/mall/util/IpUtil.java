@@ -1,9 +1,8 @@
-package util;
+package com.example.mall.util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
 
 public class IpUtil {
 

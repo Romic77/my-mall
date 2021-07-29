@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class HotQueue {
 
     @Autowired
-    private RedisTemplate redisTempate;
+    private RedisTemplate redisTemplate;
 
     @Autowired
     private RocketMQTemplate rocketMQTemplate;
@@ -43,19 +43,19 @@ public class HotQueue {
      */
     public int hot2Queue(String username, String id, Integer num) {
         //获取该商品在Redis里面的信息
-        boolean bo = redisTempate.boundHashOps("HotSeckillGoods").hasKey(id);
+        boolean bo = redisTemplate.boundHashOps("HotSeckillGoods").hasKey(id);
         if (!bo) {
             return NOT_HOT;
         }
 
         //避免重复排队
-        Long count = redisTempate.boundValueOps("OrderQueue" + username).increment(1);
+        Long count = redisTemplate.boundValueOps("OrderQueue" + username).increment(1);
         if (count > 1) {
             //请勿重复排队
             return HAS_QUEUQ;
         }
         //过期
-        redisTempate.boundValueOps("OrderQueue" + username).expire(2, TimeUnit.MINUTES);
+        redisTemplate.boundValueOps("OrderQueue" + username).expire(2, TimeUnit.MINUTES);
         //执行排队
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("username", username);

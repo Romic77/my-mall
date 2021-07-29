@@ -1,6 +1,7 @@
 package com.example.user.controller;
 
 import com.alibaba.nacos.client.utils.IPUtil;
+import com.example.mall.util.IpUtil;
 import com.example.model.UserInfo;
 import com.example.user.service.UserInfoService;
 import com.example.util.JwtToken;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import util.IpUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;

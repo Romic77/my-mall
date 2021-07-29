@@ -19,9 +19,25 @@ spring:
             - Path=/mall/**
           filters:
             - StripPrefix=1
+        #购物车
+        - id: cart_route
+          uri: lb://mall-cart
+          predicates:
+            - Path=/mall/cart/**
+          filters:
+            - StripPrefix=1
+        #用户服务
+        - id: user_route
+          uri: lb://mall-user
+          predicates:
+            - Path=/mall/address/**,/mall/user/info/**
+          filters:
+            - StripPrefix=1
   redis:
     host: localhost
     port: 6379
+    password: 123456
+
 #producer
 rocketmq:
   name-server: 192.168.100.130:9876
