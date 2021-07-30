@@ -23,6 +23,7 @@
         <module>mall-pay-service</module>
         <module>mall-seckill-service</module>
         <module>mall-dw-service</module>
+        <module>mall-permission-service</module>
     </modules>
 
     <properties>

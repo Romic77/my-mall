@@ -2,12 +2,7 @@ package com.example.filter;
 
 import com.alibaba.fastjson.JSON;
 import com.example.hot.HotQueue;
-import com.example.interceptor.AuthorizationInterceptor;
-import com.example.util.IpUtil;
-import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.permission.AuthorizationIntterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -17,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,37 +25,40 @@ import java.util.Map;
 public class ApiFilter implements GlobalFilter, Ordered {
     @Autowired
     private HotQueue hotQueue;
-    /**
-     * logger
-     */
-    private static final Logger logger = LoggerFactory.getLogger(ApiFilter.class);
 
-    @SneakyThrows
+    @Autowired
+    private AuthorizationIntterceptor authorizationIntterceptor;
+
+    /***
+     * 执行拦截处理      http://localhost:9001/mall/seckill/order?id&num
+     *                 JWT
+     * @param exchange
+     * @param chain
+     * @return
+     */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-        //获取uri
+        //uri
         String uri = request.getURI().getPath();
 
-        if (StringUtils.equals(uri,"/mall/user/info/login")) {
-            //放行
+        //是否需要拦截
+        if (!authorizationIntterceptor.isIntercept(exchange)) {
             return chain.filter(exchange);
         }
 
-        //客户端IP
-        String ip = IpUtil.getIp(request);
-
-        //用户令牌
-        String token = request.getHeaders().getFirst("authorization");
         //令牌校验
-        Map<String, Object> resultMap = AuthorizationInterceptor.jwtVerify(token, ip);
-        if (resultMap == null) {
-            endProcess(exchange, 401, "no token");
+        Map<String, Object> resultMap = authorizationIntterceptor.tokenIntercept(exchange);
+        if (resultMap == null || !authorizationIntterceptor.rolePermission(exchange, resultMap)) {
+            //令牌校验失败 或者没有权限
+            endProcess(exchange, 401, "Access denied");
+            return chain.filter(exchange);
         }
 
+        //秒杀过滤
         if (uri.equals("/seckill/order")) {
-            //秒杀过滤
             seckillFilter(exchange, request, resultMap.get("username").toString());
+            return chain.filter(exchange);
         }
 
         //NOT_HOT 直接由后端服务处理
@@ -71,6 +70,7 @@ public class ApiFilter implements GlobalFilter, Ordered {
      * @param exchange
      * @param request
      * @param username
+     * @return
      */
     private void seckillFilter(ServerWebExchange exchange, ServerHttpRequest request, String username) {
         //商品ID
@@ -87,13 +87,15 @@ public class ApiFilter implements GlobalFilter, Ordered {
         }
     }
 
-    /***
+
+    /****
      * 结束程序
      * @param exchange
      * @param code
      * @param message
      */
     public void endProcess(ServerWebExchange exchange, Integer code, String message) {
+        //响应状态码200
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("code", code);
         resultMap.put("message", message);
@@ -104,6 +106,7 @@ public class ApiFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return 0;
+        return 10001;
     }
 }
+
