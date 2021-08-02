@@ -42,6 +42,7 @@ public class AuthorizationIntterceptor {
         URI routerUri = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR);
         //获取所有权限
         List<Permission> permissionMatch0 = (List<Permission>) redisTemplate.boundHashOps("RolePermissionAll").get("PermissionListMatch0");
+
         //完全匹配
         Permission permission = match0(permissionMatch0, uri, method, routerUri.getHost());
         //完全匹配如果没有，则匹配通配符
