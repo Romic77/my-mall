@@ -1,20 +1,26 @@
 package com.example.filter;
 
+import com.alibaba.fastjson.JSON;
 import com.example.hot.HotQueue;
 import com.example.permission.AuthorizationIntterceptor;
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,12 +108,11 @@ public class ApiFilter implements GlobalFilter, Ordered {
         resultMap.put("code", code);
         resultMap.put("message", message);
         ServerHttpResponse response = exchange.getResponse();
+        response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
         response.setStatusCode(HttpStatus.OK);
-        response.setComplete();
-        DataBuffer buffer = response.bufferFactory().wrap(resultMap.toString().getBytes());
-        response.writeWith(Mono.just(buffer));
-
+        response.getHeaders().add("message", JSON.toJSONString(resultMap));
     }
+
 
     @Override
     public int getOrder() {
