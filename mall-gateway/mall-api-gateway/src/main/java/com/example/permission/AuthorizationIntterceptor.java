@@ -82,13 +82,13 @@ public class AuthorizationIntterceptor {
         //循环判断每个角色是否有权限
         for (String role : roles) {
             //获取完全匹配权限集合
-            Set<Permission> permissions = (Set<Permission>) redisTemplate.boundHashOps("RolePermissionMap").get("Role_0_" + role);
+            Set<Permission> permissions0 = (Set<Permission>) redisTemplate.boundHashOps("RolePermissionMap").get("Role_0_" + role);
 
-            if (permissions == null) {
+            if (permissions0 == null) {
                 continue;
             }
             //循环判断
-            permission = match0(new ArrayList<Permission>(permissions), uri, method, servicename);
+            permission = match0(new ArrayList<Permission>(permissions0), uri, method, servicename);
             if (permission != null) {
                 break;
             }
@@ -97,6 +97,21 @@ public class AuthorizationIntterceptor {
         //permission==null，通配符方式匹配
         if (permission == null) {
             //通配符匹配
+            for (String role : roles) {
+                //获取完全匹配权限集合
+                Set<Permission> permissions1 = (Set<Permission>) redisTemplate.boundHashOps("RolePermissionMap").get("Role_1_" + role);
+
+                if (permissions1 == null) {
+                    continue;
+                }
+
+                //循环判断
+                permission = match1(new ArrayList<Permission>(permissions1), uri, method, servicename);
+                if (permission != null) {
+                    break;
+                }
+            }
+
         }
         return permission != null;
     }
