@@ -4,6 +4,7 @@ import com.example.model.Permission;
 import com.example.util.IpUtil;
 import com.example.util.JwtToken;
 import com.example.util.MD5;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -35,7 +36,7 @@ public class AuthorizationIntterceptor {
         //request
         ServerHttpRequest request = exchange.getRequest();
         //uri
-        String uri = request.getURI().toString();
+        String uri = request.getURI().getPath();
         //提交方法
         String method = request.getMethodValue();
         //路由URI信息
@@ -54,7 +55,7 @@ public class AuthorizationIntterceptor {
         }
         //如果此时permission则表示不需要进行权限校验
         if (permission == null) {
-            //不需要权限校验
+            //如果通配符匹配也为空，表明当前请求不需要进行权限校验
             return false;
         }
         return true;
@@ -170,6 +171,9 @@ public class AuthorizationIntterceptor {
      */
     public static Map<String, Object> jwtVerify(String token, String clientIp) {
         try {
+            if (StringUtils.isEmpty(token)) {
+                return null;
+            }
             //解析Token
             Map<String, Object> dataMap = JwtToken.parseToken(token);
             //获取Token中IP的MD5

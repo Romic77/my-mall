@@ -1,6 +1,5 @@
 package com.example.filter;
 
-import com.alibaba.fastjson.JSON;
 import com.example.hot.HotQueue;
 import com.example.permission.AuthorizationIntterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +7,14 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,14 +101,18 @@ public class ApiFilter implements GlobalFilter, Ordered {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("code", code);
         resultMap.put("message", message);
-        exchange.getResponse().setStatusCode(HttpStatus.OK);
-        exchange.getResponse().setComplete();
-        exchange.getResponse().getHeaders().add("message", JSON.toJSONString(resultMap));
+        ServerHttpResponse response = exchange.getResponse();
+        response.setStatusCode(HttpStatus.OK);
+        response.setComplete();
+        DataBuffer buffer = response.bufferFactory().wrap(resultMap.toString().getBytes());
+        response.writeWith(Mono.just(buffer));
+
     }
 
     @Override
     public int getOrder() {
         return 10001;
     }
+
 }
 

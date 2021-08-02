@@ -15,24 +15,25 @@ import java.util.concurrent.TimeUnit;
 public class JwtToken {
 
     //默认秘钥
-    private static final String DEFAULT_SECRET="springcloudalibaba";
+    private static final String DEFAULT_SECRET = "springcloudalibaba";
 
     /***
      * 创建Jwt令牌
      * 秘钥：secret
      * 载荷:dataMap(Map)
      */
-    public static String createToken(Map<String,Object> dataMap){
-        return createToken(dataMap,null);
+    public static String createToken(Map<String, Object> dataMap) {
+        return createToken(dataMap, null);
     }
+
     /***
      * 创建Jwt令牌
      * 秘钥：secret
      * 载荷:dataMap(Map)
      */
-    public static String createToken(Map<String,Object> dataMap, String secret){
+    public static String createToken(Map<String, Object> dataMap, String secret) {
         //确认秘钥
-        if(StringUtils.isEmpty(secret)){
+        if (StringUtils.isEmpty(secret)) {
             secret = DEFAULT_SECRET;
         }
 
@@ -42,30 +43,34 @@ public class JwtToken {
         //jwt令牌创建
         return
                 JWT.create()
-                        .withClaim("body",dataMap)  //自定义载荷
+                        .withClaim("body", dataMap)  //自定义载荷
                         .withIssuer("GP")   //签发者
                         .withSubject("JWT令牌")   //主题
                         .withAudience("member") //接收方
-                        .withExpiresAt(new Date(System.currentTimeMillis()+3600000))    //过期时间
-                        .withNotBefore(new Date(System.currentTimeMillis()+1000))       //1秒后才能使用
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))    //过期时间
+                        .withNotBefore(new Date(System.currentTimeMillis() + 1000))       //1秒后才能使用
                         .withIssuedAt(new Date())   //签发时间
-                        .withJWTId(UUID.randomUUID().toString().replace("-",""))    //唯一标识符
+                        .withJWTId(UUID.randomUUID().toString().replace("-", ""))    //唯一标识符
                         .sign(algorithm);
     }
 
     /****
      * 令牌解析
      */
-    public static Map<String,Object> parseToken(String token){
-        return parseToken(token,null);
+    public static Map<String, Object> parseToken(String token) {
+        return parseToken(token, null);
     }
+
     /****
      * 令牌解析
      */
-    public static Map<String,Object> parseToken(String token,String secret){
+    public static Map<String, Object> parseToken(String token, String secret) {
         //确认秘钥
-        if(StringUtils.isEmpty(secret)){
+        if (StringUtils.isEmpty(secret)) {
             secret = DEFAULT_SECRET;
+        }
+        if (StringUtils.isEmpty(token)) {
+            return null;
         }
 
         //确认签名算法
@@ -80,9 +85,9 @@ public class JwtToken {
 
     public static void main(String[] args) throws InterruptedException {
         //创建令牌
-        Map<String,Object> dataMap = new HashMap<String,Object>();
-        dataMap.put("name","zhangsan");
-        dataMap.put("address","湖南");
+        Map<String, Object> dataMap = new HashMap<String, Object>();
+        dataMap.put("name", "zhangsan");
+        dataMap.put("address", "湖南");
 
         //创建令牌
         String token = createToken(dataMap);
