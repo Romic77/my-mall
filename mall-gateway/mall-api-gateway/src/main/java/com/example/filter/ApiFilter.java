@@ -8,12 +8,15 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +46,7 @@ public class ApiFilter implements GlobalFilter, Ordered {
         //uri
         String uri = request.getURI().getPath();
 
-        //是否需要拦截
+        //不在权限表的可以直接直接访问 不需要拦截
         if (!authorizationIntterceptor.isIntercept(exchange)) {
             return chain.filter(exchange);
         }
@@ -52,14 +55,12 @@ public class ApiFilter implements GlobalFilter, Ordered {
         Map<String, Object> resultMap = authorizationIntterceptor.tokenIntercept(exchange);
         if (resultMap == null || !authorizationIntterceptor.rolePermission(exchange, resultMap)) {
             //令牌校验失败 或者没有权限
-            endProcess(exchange, 401, "Access denied");
-            return chain.filter(exchange);
+            return endProcess(exchange, 401, "Access denied");
         }
 
         //秒杀过滤
         if (uri.equals("/seckill/order")) {
-            seckillFilter(exchange, request, resultMap.get("username").toString());
-            return chain.filter(exchange);
+            return seckillFilter(chain, exchange, request, resultMap.get("username").toString());
         }
 
         //NOT_HOT 直接由后端服务处理
@@ -73,7 +74,8 @@ public class ApiFilter implements GlobalFilter, Ordered {
      * @param username
      * @return
      */
-    private void seckillFilter(ServerWebExchange exchange, ServerHttpRequest request, String username) {
+    private Mono<Void> seckillFilter(GatewayFilterChain chain, ServerWebExchange exchange,
+                                     ServerHttpRequest request, String username) {
         //商品ID
         String id = request.getQueryParams().getFirst("id");
         //数量
@@ -82,10 +84,11 @@ public class ApiFilter implements GlobalFilter, Ordered {
         //排队结果
         int result = hotQueue.hot2Queue(username, id, num);
 
-        //QUEUE_ING、HAS_QUEUE
+        //如果状态为QUEUE_ING、HAS_QUEUE 则直接返回message
         if (result == HotQueue.QUEUE_ING || result == HotQueue.HAS_QUEUQ) {
-            endProcess(exchange, result, "hot");
+            return endProcess(exchange, result, "hot");
         }
+        return chain.filter(exchange);
     }
 
 
@@ -95,7 +98,7 @@ public class ApiFilter implements GlobalFilter, Ordered {
      * @param code
      * @param message
      */
-    public void endProcess(ServerWebExchange exchange, Integer code, String message) {
+    public Mono<Void> endProcess(ServerWebExchange exchange, Integer code, String message) {
         //响应状态码200
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("code", code);
@@ -103,7 +106,10 @@ public class ApiFilter implements GlobalFilter, Ordered {
         ServerHttpResponse response = exchange.getResponse();
         response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
         response.setStatusCode(HttpStatus.OK);
-        response.getHeaders().add("message", JSON.toJSONString(resultMap));
+        //response.getHeaders().add("message", JSON.toJSONString(resultMap));
+
+        DataBuffer dataBuffer = exchange.getResponse().bufferFactory().wrap(JSON.toJSONString(resultMap).getBytes(StandardCharsets.UTF_8));
+        return response.writeWith(Mono.just(dataBuffer));
     }
 
 
