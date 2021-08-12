@@ -33,6 +33,19 @@ spring:
             - Path=/mall/address/**,/mall/user/info/**
           filters:
             - StripPrefix=1
+        - id: goods_route
+          uri: lb://mall-goods
+          predicates:
+            - Path=/mall/brand/**,/mall/category/**,/mall/skuAttribute/**,/mall/sku/**,/mall/spu/**
+          filters:
+            - StripPrefix=1
+            #指定过滤器
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@ipKeyResolver}'
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 2
+
   redis:
     host: localhost
     port: 6379
