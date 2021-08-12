@@ -2,6 +2,8 @@ package com.example.init;
 
 import com.example.model.Permission;
 import com.example.service.PermissionService;
+import org.redisson.api.RBloomFilter;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -23,6 +25,9 @@ public class InitPermission implements ApplicationRunner {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private RedissonClient redissonClient;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         //根据匹配方式查找
@@ -37,6 +42,15 @@ public class InitPermission implements ApplicationRunner {
         redisTemplate.boundHashOps("RolePermissionAll").put("PermissionListMatch0", permissionMatch0);
         redisTemplate.boundHashOps("RolePermissionAll").put("PermissionListMatch1", permissionMatch1);
         redisTemplate.boundHashOps("RolePermissionMap").putAll(roleMap);
+
+        //初始化布隆过滤器 - 向布隆数据之中添加数据
+        RBloomFilter<String> filters = redissonClient.getBloomFilter("UriBloomFilterArray");
+        //初始化数组长度&误判率
+        filters.tryInit(10000l, 0.001);
+        // 完全匹配URL加入到布隆过滤器
+        permissionMatch0.forEach(permission -> filters.add(permission.getUrl()));
+        // 通配符匹配加入到布隆过滤器
+        permissionMatch1.forEach(permission -> filters.add(permission.getUrl()));
     }
 
     /**

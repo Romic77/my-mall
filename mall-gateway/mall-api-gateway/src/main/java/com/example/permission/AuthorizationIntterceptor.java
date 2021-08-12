@@ -5,6 +5,8 @@ import com.example.util.IpUtil;
 import com.example.util.JwtToken;
 import com.example.util.MD5;
 import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RBloomFilter;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,6 +30,22 @@ import java.util.Set;
 public class AuthorizationIntterceptor {
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+    /**
+     * 布隆过滤器-过滤uri
+     *
+     * @param uri
+     * @return
+     */
+    public boolean isValid(String uri) {
+        //获取数组对象
+        RBloomFilter<Object> bloomFilter = redissonClient.getBloomFilter("UriBloomFilterArray");
+        return bloomFilter.contains(uri);
+    }
+
 
     /**
      * 判断是否需要拦截指定请求
