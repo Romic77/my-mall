@@ -17,11 +17,11 @@ spring:
         #Nacos的注册地址
         server-addr: localhost:8848
   redis:
-    host: localhost
-    port: 6379
-    password: 123456
-#    cluster:
-#      nodes: localhost:6379
+#    host: localhost
+#    port: 6379
+#    password: 123456
+    cluster:
+      nodes: 192.168.116.135:7001,192.168.116.135:7002,192.168.116.135:7003
 # ====================MybatisPlus====================
 mybatis-plus:
   mapper-locations: mapper/*.xml

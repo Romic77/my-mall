@@ -42,7 +42,7 @@ public class AuthorizationIntterceptor {
      */
     public boolean isValid(String uri) {
         //获取数组对象
-        RBloomFilter<Object> bloomFilter = redissonClient.getBloomFilter("UriBloomFilterArray");
+        RBloomFilter<String> bloomFilter = redissonClient.getBloomFilter("UriBloomFilterArray");
         return bloomFilter.contains(uri);
     }
 

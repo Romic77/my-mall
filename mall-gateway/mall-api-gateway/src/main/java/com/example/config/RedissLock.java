@@ -1,4 +1,4 @@
-package com.example.init;
+package com.example.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -26,7 +26,6 @@ public class RedissLock {
                         "redis://192.168.116.135:7001",
                         "redis://192.168.116.135:7002",
                         "redis://192.168.116.135:7003");
-
         //创建RedissonClient
         return Redisson.create(config);
     }
