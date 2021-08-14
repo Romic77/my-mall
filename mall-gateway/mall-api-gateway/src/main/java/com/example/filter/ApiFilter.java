@@ -47,9 +47,9 @@ public class ApiFilter implements GlobalFilter, Ordered {
         String uri = request.getURI().getPath();
 
         //布隆过滤器-uri
-        if(!authorizationIntterceptor.isValid(uri)){
-            return endProcess(exchange, 401, "uri don't exits");
-        }
+//        if(!authorizationIntterceptor.isValid(uri)){
+//            return endProcess(exchange, 401, "uri don't exits");
+//        }
 
        //不在权限表的可以直接直接访问 不需要拦截
         if (!authorizationIntterceptor.isIntercept(exchange)) {

@@ -46,11 +46,11 @@ public class InitPermission implements ApplicationRunner {
         //初始化布隆过滤器 - 向布隆数据之中添加数据
         RBloomFilter<String> filters = redissonClient.getBloomFilter("UriBloomFilterArray");
         //初始化数组长度&误判率
-        filters.tryInit(10000l, 0.001);
+        filters.tryInit(10000L, 0.001);
         // 完全匹配URL加入到布隆过滤器
         permissionMatch0.forEach(permission -> filters.add(permission.getUrl()));
-        // 通配符匹配加入到布隆过滤器
-        permissionMatch1.forEach(permission -> filters.add(permission.getUrl()));
+        //TODO: 通配符匹配加入到布隆过滤器 ,无法校验
+       // permissionMatch1.forEach(permission -> filters.add(permission.getUrl()));
     }
 
     /**

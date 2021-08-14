@@ -8,7 +8,7 @@ spring:
       transport:
         #服务本地端口,当前服务和Sentinel控制台通信的端口
         port: 8719
-        dashboard: localhost:8858
+        dashboard: localhost:6082
     nacos:
       config:
         file-extension: yaml
